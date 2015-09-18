@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import locale
 import logging
 from django import forms
 from django.conf import settings
@@ -27,6 +28,8 @@ class PayPalDateTimeField(forms.DateTimeField):
     input_formats = PAYPAL_DATE_FORMATS
 
     def strptime(self, value, format):
+        old_locale = locale.getlocale()
+        locale.setlocale(locale.LC_ALL, "C")
         dt = super(PayPalDateTimeField, self).strptime(value, format)
         parts = format.split(" ")
         if timezone.pytz and settings.USE_TZ:
